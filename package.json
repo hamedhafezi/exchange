@@ -13,6 +13,7 @@
         "express-rate-limit": "^5.5.1",
         "helmet": "^4.6.0",
         "http-status": "^1.5.0",
+        "mongodb": "^4.2.0",
         "morgan": "^1.10.0",
         "node-cron": "^3.0.0",
         "swagger-jsdoc": "^6.1.0",
