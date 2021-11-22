@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-export function handleGetSymbols(req: Request, res: Response) {
-    res.send("handleGetSymbols");
-}
+import { getAllSymbols } from "../services/symbols.service";
+export function handleGetSymbols(req: Request, res: Response) {}
 export function handleSearchSymbols(req: Request, res: Response) {
+    const allSymbols = getAllSymbols();
     res.send("handleSearchSymbols");
 }
 export default {
