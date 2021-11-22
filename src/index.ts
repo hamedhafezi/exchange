@@ -1,9 +1,10 @@
+import dotenv from "dotenv";
 import app from "./app";
 import { mongodbInit } from "./database";
 import logger from "./utils/logger";
 const PORT = 3000;
 let server: any;
-
+dotenv.config();
 mongodbInit(function onConnectionSuccess() {
     server = app.listen(PORT, onServerStart);
 });
