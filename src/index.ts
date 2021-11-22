@@ -1,7 +1,12 @@
 import app from "./app";
+import { mongodbInit } from "./database";
 import logger from "./utils/logger";
 const PORT = 3000;
-const server = app.listen(PORT, onServerStart);
+let server: any;
+
+mongodbInit(function onConnectionSuccess() {
+    server = app.listen(PORT, onServerStart);
+});
 
 function onServerStart() {
     logger.info(`Server is running on port ${PORT}...`, {
@@ -9,7 +14,8 @@ function onServerStart() {
     });
     console.log(`Server is running on port ${PORT}...`);
 }
-const exitHandler = () => {
+
+function exitHandler() {
     if (server) {
         server.close(() => {
             logger.info("Server closed").end();
@@ -20,7 +26,8 @@ const exitHandler = () => {
     } else {
         process.exit(1);
     }
-};
+}
+
 function handleError(error: Error, origin: NodeJS.UncaughtExceptionOrigin) {
     logger.error(error.message, { label: origin });
     exitHandler();
