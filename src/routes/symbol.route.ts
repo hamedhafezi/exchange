@@ -1,6 +1,10 @@
 import { Router } from "express";
+import {
+    handleGetSymbols,
+    handleSearchSymbols,
+} from "../controllers/symbols.controller";
 const router = Router();
-router.get("/", (req, res) => {});
-router.get("/search/", async function get(req, res) {});
+router.get("/", handleGetSymbols);
+router.get("/search/", handleSearchSymbols);
 
 export default router;
