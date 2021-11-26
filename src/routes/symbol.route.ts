@@ -3,8 +3,11 @@ import {
     handleGetSymbols,
     handleSearchSymbols,
 } from "../controllers/symbols.controller";
-const router = Router();
-router.get("/", handleGetSymbols);
-router.get("/search/", handleSearchSymbols);
+import validator from "../middlewares/validator.middleware";
 
-export default router;
+const symbolRouter = Router();
+
+symbolRouter.get("/", validator({}), handleGetSymbols);
+symbolRouter.get("/search/", handleSearchSymbols);
+
+export default symbolRouter;

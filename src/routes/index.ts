@@ -1,10 +1,17 @@
-import symbolRoute from "./symbol.route";
 import { Router } from "express";
+import adminRouter from "./admin.route";
+import symbolRouter from "./symbol.route";
+import { IRoute } from "../interfaces";
+
 const router = Router();
-const routes = [
+const routes: IRoute[] = [
     {
         path: "/symbols",
-        route: symbolRoute,
+        route: symbolRouter,
+    },
+    {
+        path: "/admin",
+        route: adminRouter,
     },
 ];
 routes.forEach((route) => {

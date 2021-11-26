@@ -5,63 +5,63 @@ const symbolSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    name: {
+    symbolName: {
         type: String,
         required: true,
     },
-    baseCurrency: {
+    buy: {
         type: String,
         required: true,
     },
-    quoteCurrency: {
+    sell: {
         type: String,
         required: true,
     },
-    feeCurrency: {
+    changeRate: {
         type: String,
         required: true,
     },
-    market: {
+    changePrice: {
         type: String,
         required: true,
     },
-    baseMinSize: {
+    high: {
         type: String,
         required: true,
     },
-    quoteMinSize: {
+    low: {
         type: String,
         required: true,
     },
-    baseMaxSize: {
+    vol: {
         type: String,
         required: true,
     },
-    quoteMaxSize: {
+    volValue: {
         type: String,
         required: true,
     },
-    baseIncrement: {
+    last: {
         type: String,
         required: true,
     },
-    quoteIncrement: {
+    averagePrice: {
         type: String,
         required: true,
     },
-    priceIncrement: {
+    takerFeeRate: {
         type: String,
         required: true,
     },
-    priceLimitRate: {
+    makerFeeRate: {
         type: String,
         required: true,
     },
-    isMarginEnabled: {
+    takerCoefficient: {
         type: String,
         required: true,
     },
-    enableTrading: {
+    makerCoefficient: {
         type: String,
         required: true,
     },
