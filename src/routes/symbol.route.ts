@@ -1,13 +1,10 @@
 import { Router } from "express";
-import {
-    handleGetSymbols,
-    handleSearchSymbols,
-} from "../controllers/symbols.controller";
+import { handleSearchSymbols } from "../controllers/symbols.controller";
 import validator from "../middlewares/validator.middleware";
+import { symbolsSchema } from "../validations/symbol.validation";
 
 const symbolRouter = Router();
 
-symbolRouter.get("/", validator({}), handleGetSymbols);
-symbolRouter.get("/search/", handleSearchSymbols);
+symbolRouter.get("/", validator(symbolsSchema), handleSearchSymbols);
 
 export default symbolRouter;
