@@ -1,70 +1,65 @@
 import mongoose from "mongoose";
 
-const symbolSchema = new mongoose.Schema({
-    symbol: {
-        type: String,
-        required: true,
+const symbolSchema = new mongoose.Schema(
+    {
+        symbol: {
+            type: String,
+            unique: true,
+        },
+        symbolName: {
+            type: String,
+        },
+        buy: {
+            type: String,
+        },
+        sell: {
+            type: String,
+        },
+        changeRate: {
+            type: String,
+        },
+        changePrice: {
+            type: String,
+        },
+        high: {
+            type: String,
+        },
+        low: {
+            type: String,
+        },
+        vol: {
+            type: String,
+        },
+        volValue: {
+            type: String,
+        },
+        last: {
+            type: String,
+        },
+        averagePrice: {
+            type: String,
+        },
+        takerFeeRate: {
+            type: String,
+        },
+        makerFeeRate: {
+            type: String,
+        },
+        takerCoefficient: {
+            type: String,
+        },
+        makerCoefficient: {
+            type: String,
+        },
+        rialPrice: {
+            type: String,
+        },
     },
-    symbolName: {
-        type: String,
-        required: true,
-    },
-    buy: {
-        type: String,
-        required: true,
-    },
-    sell: {
-        type: String,
-        required: true,
-    },
-    changeRate: {
-        type: String,
-        required: true,
-    },
-    changePrice: {
-        type: String,
-        required: true,
-    },
-    high: {
-        type: String,
-        required: true,
-    },
-    low: {
-        type: String,
-        required: true,
-    },
-    vol: {
-        type: String,
-        required: true,
-    },
-    volValue: {
-        type: String,
-        required: true,
-    },
-    last: {
-        type: String,
-        required: true,
-    },
-    averagePrice: {
-        type: String,
-        required: true,
-    },
-    takerFeeRate: {
-        type: String,
-        required: true,
-    },
-    makerFeeRate: {
-        type: String,
-        required: true,
-    },
-    takerCoefficient: {
-        type: String,
-        required: true,
-    },
-    makerCoefficient: {
-        type: String,
-        required: true,
-    },
-});
+    {
+        timestamps: true,
+        _id: false,
+        id: false,
+    }
+);
 const Symbol = mongoose.model("Symbol", symbolSchema);
 export default Symbol;

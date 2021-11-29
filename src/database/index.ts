@@ -2,7 +2,9 @@ import mongoose from "mongoose";
 import logger from "../utils/logger";
 export async function mongodbInit(onDBConnected: Function) {
     try {
-        await mongoose.connect("mongodb://127.0.0.1:27017/exchange");
+        await mongoose.connect("mongodb://127.0.0.1:27017/exchange", {
+            loggerLevel: "debug",
+        });
         onDBConnected();
         console.log("DB Connected");
     } catch (error: any) {
