@@ -3,7 +3,6 @@ import morgan from "morgan";
 import helmet from "helmet";
 import routes from "./routes";
 import httpStatus from "http-status";
-import ApiError from "./utils/ApiError";
 const app = express();
 
 app.use(helmet());

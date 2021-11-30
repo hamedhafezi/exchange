@@ -3,6 +3,7 @@ import Setting from "../models/setting.schema";
 import Symbol from "../models/symbol.schema";
 
 export function getAllSymbols() {
+    console.log("start");
     https.get("https://api.kucoin.com/api/v1/market/allTickers", (resp) => {
         let data: any = "";
         resp.on("data", (chunk) => {
@@ -47,7 +48,7 @@ export async function searchSymbols(
     page: number,
     pageSize: number
 ): Promise<{ symbols: any[]; count: number } | undefined> {
-    getAllSymbols();
+    // getAllSymbols();
     try {
         let query = {
             symbolName: { $regex: key, $options: "i" },
