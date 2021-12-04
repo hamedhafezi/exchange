@@ -2,9 +2,9 @@ import Joi from "joi";
 
 const symbolsSchema = {
     query: {
-        key: Joi.string().min(1).max(12).alphanum(),
-        page: Joi.number().positive(),
-        pageSize: Joi.number().positive(),
+        key: Joi.string().empty("").optional().max(12),
+        page: Joi.number().optional().positive(),
+        pageSize: Joi.number().optional().positive(),
     },
 };
 export { symbolsSchema };

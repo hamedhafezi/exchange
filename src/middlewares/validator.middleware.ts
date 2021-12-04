@@ -18,7 +18,7 @@ const validator =
                 code: httpStatus.BAD_REQUEST,
                 message: errorMessage,
             });
-            // return next(error);
+            return next(error);
         }
         Object.assign(req, value);
         return next();

@@ -1,16 +1,19 @@
 import Setting from "../models/setting.schema";
 import { SettingsENUM } from "../utils/constants";
 
-export async function updateSettings(setting: SettingsENUM, price: string) {
+export async function updateOrInsertSettings(
+    setting: SettingsENUM,
+    value: string
+) {
     try {
         const settingItem = await Setting.findOneAndUpdate({
             id: setting,
-            value: price,
+            value: value,
         }).exec();
         if (!settingItem) {
             const settingItem = new Setting({
                 id: setting,
-                value: price,
+                value: value,
             });
             await settingItem.save();
         }
@@ -18,12 +21,12 @@ export async function updateSettings(setting: SettingsENUM, price: string) {
         return console.log(error);
     }
 }
-export async function getUsdtToRialPrice() {
+export async function getSetting(setting: SettingsENUM) {
     try {
-        const usdtToRialPrice = await Setting.findOne({
-            id: SettingsENUM.UsdtToRial,
+        const settingItem = await Setting.findOne({
+            id: setting,
         }).exec();
-        return usdtToRialPrice;
+        return settingItem;
     } catch (error) {
         return console.log(error);
     }

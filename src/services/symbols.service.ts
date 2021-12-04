@@ -1,73 +1,63 @@
-import https from "https";
-import Setting from "../models/setting.schema";
-import Symbol from "../models/symbol.schema";
+import { fetchSymbols } from "./binance.service";
+import {
+    insertAll,
+    findSymbols,
+    updateOne,
+    getAllSymbolsCount,
+} from "../repositories/symbol.repository";
+import { getUsdtToRialPrice } from "./admin.service";
+import { ISymbol } from "../interfaces/symbol";
 
-export function getAllSymbols() {
-    console.log("start");
-    https.get("https://api.kucoin.com/api/v1/market/allTickers", (resp) => {
-        let data: any = "";
-        resp.on("data", (chunk) => {
-            data += chunk;
-        });
-        resp.on("end", async () => {
-            try {
-                let finalData = JSON.parse(data).data.ticker;
-                const count = await Symbol.countDocuments();
-                if (count) {
-                    // await Symbol.collection.updateMany({}, finalData.data.ticker, { upsert: true });
-                    finalData.forEach(async (symbol: any) => {
-                        await Symbol.updateOne(
-                            {
-                                $and: [
-                                    {
-                                        symbol: { $eq: symbol.symbol },
-                                        sell: { $ne: symbol.sell },
-                                    },
-                                ],
-                            },
-                            {
-                                $set: {
-                                    sell: symbol.sell,
-                                },
-                            }
-                            // { upsert: true, }
-                        );
-                    });
-                } else {
-                    await Symbol.insertMany(finalData);
+export async function fetchSymbolsAndSave() {
+    const symbols = (await fetchSymbols()) as ISymbol[];
+    const count = await getAllSymbolsCount();
+    if (!count) {
+        await insertAll(symbols);
+    } else {
+        symbols.forEach(async (symbol) => {
+            await updateOne(
+                {
+                    $and: [
+                        {
+                            symbol: { $eq: symbol.symbol },
+                            markPrice: { $ne: symbol.markPrice },
+                        },
+                    ],
+                },
+                {
+                    $set: {
+                        markPrice: symbol.markPrice,
+                    },
                 }
-            } catch (error) {
-                console.log(error);
-            }
+            );
         });
-    });
+    }
 }
 
-export async function searchSymbols(
+export async function getSymbols(
     key: string,
     page: number,
     pageSize: number
-): Promise<{ symbols: any[]; count: number } | undefined> {
-    // getAllSymbols();
-    try {
-        let query = {
-            symbolName: { $regex: key, $options: "i" },
-        };
-        const symbols = await Symbol.find(query)
-            .sort({ updatedAt: "desc" })
-            .limit(pageSize)
-            .skip(pageSize * page)
-            .exec();
-        const count = await Symbol.find(query).countDocuments();
-        const usdtToRial = await Setting.findOne({ id: "usdtToRial" });
-        symbols.forEach((s) => {
-            s.rialPrice = String(
-                parseInt(usdtToRial.value, 10) * parseFloat(s.sell)
-            );
-        });
-        return { symbols, count };
-    } catch (error) {
-        console.log(error);
-        return;
+): Promise<{ symbols: ISymbol[]; count: number } | undefined> {
+    const { count, symbols } = await findSymbols(page, pageSize, key);
+    if (!count) {
+        const allSymbolsCount = await getAllSymbolsCount();
+        if (!allSymbolsCount) {
+            await fetchSymbolsAndSave();
+        }
     }
+    const usdtToRial = await getUsdtToRialPrice();
+    if (!usdtToRial?.value) {
+        throw new Error("No USDT to Rial provided!");
+    }
+    symbols.forEach((symbol) => {
+        symbol.rialPrice = calculateRialPrice(
+            usdtToRial.value,
+            symbol.markPrice
+        );
+    });
+    return { symbols, count };
+}
+function calculateRialPrice(usdtToRialPrice: string, markPrice: string) {
+    return String(parseInt(usdtToRialPrice, 10) * parseFloat(markPrice));
 }

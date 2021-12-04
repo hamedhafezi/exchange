@@ -1,8 +1,8 @@
 class ApiError extends Error {
-    statusCode: number = 400;
+    statusCode: number | string = 400;
     isOperational: boolean = true;
     constructor(
-        statusCode: number,
+        statusCode: number | string,
         message: string,
         isOperational = true,
         stack = ""

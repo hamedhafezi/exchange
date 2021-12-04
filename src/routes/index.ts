@@ -1,7 +1,7 @@
 import { Router } from "express";
 import adminRouter from "./admin.route";
 import symbolRouter from "./symbol.route";
-import { IRoute } from "../interfaces";
+import { IRoute } from "../interfaces/route";
 
 const router = Router();
 const routes: IRoute[] = [
