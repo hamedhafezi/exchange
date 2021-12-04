@@ -16,8 +16,15 @@ export async function findSymbols(
         .limit(pageSize)
         .skip(pageSize * page)
         .exec()) as ISymbol[];
-    const count = await Symbol.find(query).countDocuments(symbols);
+    const count = await Symbol.find(query).count();
     return { symbols, count };
+}
+export async function getCount(key: string): Promise<number> {
+    let query = {
+        symbol: { $regex: key, $options: "i" },
+    };
+    const count = await Symbol.find(query).count();
+    return count;
 }
 export async function insertAll(symbols: ISymbol[]) {
     await Symbol.insertMany(symbols);

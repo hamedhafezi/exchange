@@ -4,6 +4,7 @@ import {
     findSymbols,
     updateOne,
     getAllSymbolsCount,
+    getCount,
 } from "../repositories/symbol.repository";
 import { getUsdtToRialPrice } from "./admin.service";
 import { ISymbol } from "../interfaces/symbol";
@@ -39,24 +40,30 @@ export async function getSymbols(
     page: number,
     pageSize: number
 ): Promise<{ symbols: ISymbol[]; count: number } | undefined> {
-    const { count, symbols } = await findSymbols(page, pageSize, key);
-    if (!count) {
-        const allSymbolsCount = await getAllSymbolsCount();
-        if (!allSymbolsCount) {
-            await fetchSymbolsAndSave();
+    try {
+        const countForCheck = await getCount(key);
+        if (!countForCheck) {
+            const allSymbolsCount = await getAllSymbolsCount();
+            if (!allSymbolsCount) {
+                await fetchSymbolsAndSave();
+            }
         }
+        const { count, symbols } = await findSymbols(page, pageSize, key);
+        const usdtToRial = await getUsdtToRialPrice();
+        if (!usdtToRial?.value) {
+            throw new Error("No USDT to Rial provided!");
+        }
+        symbols.forEach((symbol) => {
+            symbol.rialPrice = calculateRialPrice(
+                usdtToRial.value,
+                symbol.markPrice
+            );
+        });
+        return { symbols, count };
+    } catch (error: any) {
+        console.log(error);
+        throw new Error(error.message);
     }
-    const usdtToRial = await getUsdtToRialPrice();
-    if (!usdtToRial?.value) {
-        throw new Error("No USDT to Rial provided!");
-    }
-    symbols.forEach((symbol) => {
-        symbol.rialPrice = calculateRialPrice(
-            usdtToRial.value,
-            symbol.markPrice
-        );
-    });
-    return { symbols, count };
 }
 function calculateRialPrice(usdtToRialPrice: string, markPrice: string) {
     return String(parseInt(usdtToRialPrice, 10) * parseFloat(markPrice));
