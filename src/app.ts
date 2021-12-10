@@ -5,6 +5,7 @@ import httpStatus from "http-status";
 import swaggerUi from "swagger-ui-express";
 import routes from "./routes";
 import specs from "./docs/swagger";
+import rateLimiter from "./middlewares/rate-limit.middleware";
 const app = express();
 
 app.use(helmet());
@@ -14,6 +15,7 @@ app.use(express.json());
 
 app.use(routes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use(rateLimiter);
 // hanlde unspecified routes
 app.use((_: Request, res: Response, next: NextFunction) => {
     res.status(httpStatus.NOT_FOUND).send({
