@@ -1,8 +1,10 @@
 import express, { Request, Response, NextFunction } from "express";
 import morgan from "morgan";
 import helmet from "helmet";
-import routes from "./routes";
 import httpStatus from "http-status";
+import swaggerUi from "swagger-ui-express";
+import routes from "./routes";
+import specs from "./docs/swagger";
 const app = express();
 
 app.use(helmet());
@@ -11,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(routes);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 // hanlde unspecified routes
 app.use((_: Request, res: Response, next: NextFunction) => {
     res.status(httpStatus.NOT_FOUND).send({

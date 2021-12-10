@@ -1,0 +1,63 @@
+tags:
+    - name: symbols
+      description: symbols API
+    - name: admin
+      description: admin API
+
+paths:
+    # [GET] symbols
+    /symbols:
+        get:
+            tags:
+                - symbols
+            summary: Find All Symbols
+            parameters:
+                - in: query
+                  name: key
+                  schema:
+                      type: string
+                  description: Search keyword for symbols
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                  description: Page number
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                  description: Symbols per page
+
+            responses:
+                200:
+                    description: "OK"
+                500:
+                    description: "Server Error"
+
+    # [PUT admin]
+    /admin/usdt-to-rial:
+        put:
+            tags:
+                - admin
+            summary: Update USDT to Rial price
+            consumes:
+              - application/json
+            parameters:
+              - in: body
+                name: USDT to Rial Price
+                schema:
+                  type: object
+                  required:
+                    - usdtToRial
+                  properties:
+                    usdtToRial:
+                      type: integer
+            responses:
+                200:
+                    description: "OK"
+                500:
+                    description: "Server Error"
+
+schemes:
+    - https
+    - http
